@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+// 包名定义，会影响生成的Java类的包路径
+package com.example.grpc.proto;
+
+// Java包选项
+option java_package = "com.example.grpc.proto";
+option java_outer_classname = "UserServiceProto";
+option java_multiple_files = true;
+
+// 用户信息消息定义
+message User {
+  // 用户ID，使用int64类型
+  int64 id = 1;
+  // 用户名，使用string类型
+  string username = 2;
+  // 邮箱地址
+  string email = 3;
+  // 年龄
+  int32 age = 4;
+  // 创建时间（时间戳）
+  int64 created_at = 5;
+}
+
+// 创建用户请求消息
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  int32 age = 3;
+}
+
+// 创建用户响应消息
+message CreateUserResponse {
+  // 操作是否成功
+  bool success = 1;
+  // 返回消息
+  string message = 2;
+  // 创建的用户信息（成功时返回）
+  User user = 3;
+}
+
+// 获取用户请求消息
+message GetUserRequest {
+  int64 user_id = 1;
+}
+
+// 获取用户响应消息
+message GetUserResponse {
+  bool success = 1;
+  string message = 2;
+  User user = 3;
+}
+
+// 获取所有用户请求消息（用于演示流式响应）
+message GetAllUsersRequest {
+  // 页大小（可选）
+  int32 page_size = 1;
+}
+
+// 更新用户请求消息
+message UpdateUserRequest {
+  int64 user_id = 1;
+  string username = 2;
+  string email = 3;
+  int32 age = 4;
+}
+
+// 更新用户响应消息
+message UpdateUserResponse {
+  bool success = 1;
+  string message = 2;
+  User user = 3;
+}
+
+// 删除用户请求消息
+message DeleteUserRequest {
+  int64 user_id = 1;
+}
+
+// 删除用户响应消息
+message DeleteUserResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// gRPC服务定义
+service UserService {
+  // 创建用户 - 一元RPC（最简单的RPC类型）
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  
+  // 获取单个用户 - 一元RPC
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  
+  // 获取所有用户 - 服务器流式RPC（服务器返回多个响应）
+  rpc GetAllUsers(GetAllUsersRequest) returns (stream User);
+  
+  // 更新用户信息 - 一元RPC
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  
+  // 删除用户 - 一元RPC
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+  
+  // 批量创建用户 - 客户端流式RPC（客户端发送多个请求）
+  rpc BatchCreateUsers(stream CreateUserRequest) returns (CreateUserResponse);
+  
+  // 用户聊天 - 双向流式RPC（客户端和服务器都可以发送多个消息）
+  rpc UserChat(stream ChatMessage) returns (stream ChatMessage);
+}
+
+// 聊天消息定义（用于演示双向流）
+message ChatMessage {
+  int64 user_id = 1;
+  string message = 2;
+  int64 timestamp = 3;
+} 

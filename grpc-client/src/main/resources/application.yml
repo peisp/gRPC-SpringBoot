@@ -1,0 +1,27 @@
+# Spring Boot gRPC客户端配置
+spring:
+  application:
+    name: grpc-client
+
+# HTTP服务端口（与服务端不同，避免冲突）
+server:
+  port: 8081
+
+# gRPC客户端配置
+grpc:
+  client:
+    # 定义gRPC客户端连接
+    user-service:
+      # 服务端地址
+      address: 'static://localhost:9090'
+      # 连接配置
+      negotiationType: plaintext  # 使用明文连接（非TLS）
+      # 可选：配置负载均衡
+      # loadBalancer: round_robin
+
+# 日志配置
+logging:
+  level:
+    com.example.grpc: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" 

@@ -1,0 +1,45 @@
+# Spring Boot gRPC服务端配置
+spring:
+  application:
+    name: grpc-server
+  
+  # 数据库配置 - 使用H2内存数据库
+  datasource:
+    url: jdbc:h2:mem:grpc_demo
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+  
+  # JPA配置
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop  # 每次启动时重新创建表
+    show-sql: true  # 显示SQL语句
+    properties:
+      hibernate:
+        format_sql: true  # 格式化SQL语句
+  
+  # H2控制台配置（用于查看数据库）
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# HTTP服务端口
+server:
+  port: 8080
+
+# gRPC服务配置
+grpc:
+  server:
+    port: 9090  # gRPC服务端口
+    reflection-service-enabled: true  # 启用反射服务，方便使用grpcurl等工具测试
+
+# 日志配置
+logging:
+  level:
+    com.example.grpc: DEBUG  # 我们的包日志级别
+    org.springframework.data.jpa: DEBUG  # JPA日志
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" 
